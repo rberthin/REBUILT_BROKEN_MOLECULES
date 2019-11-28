@@ -1,0 +1,18 @@
+INPUT = trajectories.xyz
+OUTPUT = box_rebuilt.dat 
+
+*---------------------------------------------------------------------------------------*
+| First compile broken_molecule.f90 (gfortran broken_molecule.f90 -o broken_molecule.x) |
+| Then execute it (./broken_molecule.x)                                                 |
+*---------------------------------------------------------------------------------------*
+
+You have to answer to several questions : 
+
+1- number of species
+2- for each species number of molecules
+3- how many atoms in molecules
+4- for each molecule type the reference atom (atom that don't move during the process of rebuilding)
+5- the box parameters (lenght in x, y and z direction)
+
+Be careful you need to put the box parameters in the same units as the one of the position file.
+Be careful the position file must contain only the positions of a single step (for the moment). 
