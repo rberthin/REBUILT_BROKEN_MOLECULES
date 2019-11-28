@@ -1,0 +1,11 @@
+1- allow to have a trajectory file with several steps (and to be able to choose which step we want to reconstruct)
+    --> BRANCH = MULTIPLE_STEPS 
+
+2- add the possibility to change the name of the trajectory file (add another question)
+    --> BRANCH = CHOOSE_NAME
+
+3- same for the output file
+    --> BRANCH = CHOOSE_NAME
+
+4- add other type of input file (lammps, pdb)
+   --> BRANCH = OTHER_THAN_XYZ
