@@ -13,6 +13,7 @@ You have to answer to several questions :
 3- how many atoms in molecules
 4- for each molecule type the reference atom (atom that don't move during the process of rebuilding)
 5- the box parameters (lenght in x, y and z direction)
+ --> THIS CAN BE DONE IN THE TERMINAL OR WITH AN INPUT FILE (parameters.in)
 
 Be careful you need to put the box parameters in the same units as the one of the position file.
 Be careful the position file must contain only the positions of a single step (for the moment). 
