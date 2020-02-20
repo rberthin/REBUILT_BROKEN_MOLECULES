@@ -96,7 +96,7 @@ DO i = 1, num_species
   DO m = 1, mol
     DO n = 1, atom
       xdiff = X(n,m)-xref(m)
-      ydiff = Y(n,m)-xref(m)
+      ydiff = Y(n,m)-yref(m)
       zdiff = Z(n,m)-zref(m)
         
       IF(xdiff > boxx/2) THEN
