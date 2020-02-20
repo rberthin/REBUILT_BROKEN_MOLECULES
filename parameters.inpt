@@ -1,0 +1,9 @@
+	! number of species
+! block do to for each specie
+	! number of molecules
+	! number of atoms in one molecule
+	! reference atom
+!box parameters
+	! in x direction
+	! in y direction
+	! in z direction

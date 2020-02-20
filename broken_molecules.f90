@@ -3,7 +3,7 @@ PROGRAM REBUILT
 IMPLICIT NONE
 
 INTEGER :: num_species, i, n, m, choice, io
-INTEGER :: atom, mol
+INTEGER :: atom, mol, choice_input
 DOUBLE PRECISION :: boxx, boxy, boxz
 DOUBLE PRECISION :: xdiff, ydiff, zdiff
 INTEGER, ALLOCATABLE, DIMENSION(:) :: num_atoms, ref_atom, num_molecules
@@ -16,44 +16,72 @@ WRITE(6,*) '*      REBUILT BROKEN MOLECULES     * '
 WRITE(6,*) '*************************************'
 WRITE(6,*)
 WRITE(6,*) ' I read only xyz files !'
+WRITE(6,*) 
+WRITE(6,*) 'Read the input file parameters.inpt (1) or answer questions (2)?'
+READ(5,*) choice_input
 WRITE(6,*)
 WRITE(6,*) ' SPECIES PARAMETER '
 WRITE(6,*) '-------------------'
-WRITE(6,*) ' How many species are there? '
-READ(5,*) num_species
 
-ALLOCATE(num_atoms(num_species))
-ALLOCATE(ref_atom(num_species))
-ALLOCATE(num_molecules(num_species))
+! *** READ PARAMETERS.INPT FILE ***
+IF (choice_input == 1) THEN
+  WRITE(6,*)'Parameters read from parameters.inpt'
+  OPEN(unit = 11, file = "parameters.inpt", status='old', iostat=io)
+  READ(11,*) num_species
+  WRITE(6,*) 'OK'
+  ALLOCATE(num_atoms(num_species))
+  ALLOCATE(ref_atom(num_species))
+  ALLOCATE(num_molecules(num_species))
+  READ(11,*)  
+  DO i = 1, num_species
+    READ(11,*) num_molecules(i)
+    READ(11,*) num_atoms(i)
+    READ(11,*) ref_atom(i)
+  ENDDO
+  READ(11,*)
+  WRITE(6,*) 'OK'
+  READ(11,*) boxx
+  READ(11,*) boxy
+  READ(11,*) boxz
+  ! *****     END     *****
 
+ELSE IF (choice_input == 2) THEN        
+  WRITE(6,*) ' How many species are there? '
+  READ(5,*) num_species
+
+  ALLOCATE(num_atoms(num_species))
+  ALLOCATE(ref_atom(num_species))
+  ALLOCATE(num_molecules(num_species))
+  
 ! INPUT NUMBER OF ATOMS IN EACH SPECIE 
 !------------------------------------------
-DO i = 1, num_species
-  WRITE(6,*) 'For the specie', i
-  WRITE(6,*) ' How many molecules of this specie ? '
-  READ(5,*) num_molecules(i)
-  WRITE(6,*) ' How many atoms are there in one molecule? '
-  READ(5,*) num_atoms(i)
-  WRITE(6,*) ' Choose the reference atom  '
-  WRITE(6,*) ' Number in the same order as in the position file '
-  READ(5,*) ref_atom(i) 
-ENDDO 
-!------------------------------------------
-
-! INPUT BOX LENGTH
-!------------------------------------------
-WRITE(6,*)
-WRITE(6,*) ' BOX PARAMETER '
-WRITE(6,*) '---------------'
-WRITE(6,*)
-WRITE(6,*) ' !! PUT IN THE SAME UNIT AS THE POSITIONS !!'
-WRITE(6,*)
-WRITE(6,*) ' Length of the box in the x direction ?'
-READ(5,*) boxx
-WRITE(6,*) ' Length of the box in the y direction ?'
-READ(5,*) boxy
-WRITE(6,*) ' Length of the box in the z direction ?'
-READ(5,*) boxz
+  DO i = 1, num_species
+    WRITE(6,*) 'For the specie', i
+    WRITE(6,*) ' How many molecules of this specie ? '
+    READ(5,*) num_molecules(i)
+    WRITE(6,*) ' How many atoms are there in one molecule? '
+    READ(5,*) num_atoms(i)
+    WRITE(6,*) ' Choose the reference atom  '
+    WRITE(6,*) ' Number in the same order as in the position file '
+    READ(5,*) ref_atom(i) 
+  ENDDO 
+  !------------------------------------------
+  
+  ! INPUT BOX LENGTH
+  !------------------------------------------
+  WRITE(6,*)
+  WRITE(6,*) ' BOX PARAMETER '
+  WRITE(6,*) '---------------'
+  WRITE(6,*)
+  WRITE(6,*) ' !! PUT IN THE SAME UNIT AS THE POSITIONS !!'
+  WRITE(6,*)
+  WRITE(6,*) ' Length of the box in the x direction ?'
+  READ(5,*) boxx
+  WRITE(6,*) ' Length of the box in the y direction ?'
+  READ(5,*) boxy
+  WRITE(6,*) ' Length of the box in the z direction ?'
+  READ(5,*) boxz
+ENDIF  
 WRITE(6,*) '--------------------------'
 WRITE(6,*) '**** END OF THE INPUT ****'
 WRITE(6,*) '--------------------------'
