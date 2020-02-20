@@ -1,7 +1,7 @@
 1- allow to have a trajectory file with several steps (and to be able to choose which step we want to reconstruct)
     --> BRANCH = MULTIPLE_STEPS 
 
-2- add the possibility to change the name of the trajectory file (add another question)
+2- add the possibility to change the name of the trajectory file (add another question + another line in the input file)
     --> BRANCH = CHOOSE_NAME
 
 3- same for the output file
