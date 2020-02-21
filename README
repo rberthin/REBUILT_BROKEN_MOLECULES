@@ -8,6 +8,7 @@ OUTPUT = box_rebuilt.dat
 You have to answer to several questions : 
 
 1- name of the input file (default is trajectories.xyz)
+2- name of the output file (default is box_rebuilt.xyz)
 2- number of species
 3- for each species number of molecules
 4- how many atoms in molecules
