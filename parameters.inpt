@@ -1,4 +1,5 @@
 trajectories.xyz
+rebuilt_traj.xyz
 1	         ! number of species
 ! block do to for each specie
 216	         ! number of molecules
