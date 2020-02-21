@@ -10,7 +10,7 @@ INTEGER, ALLOCATABLE, DIMENSION(:) :: num_atoms, ref_atom, num_molecules
 INTEGER, ALLOCATABLE, DIMENSION(:) :: xref, yref, zref
 DOUBLE PRECISION, ALLOCATABLE, DIMENSION(:,:) :: X, Y, Z
 CHARACTER(LEN=20), ALLOCATABLE, DIMENSION(:,:) :: nom
-CHARACTER(LEN=20) :: input_file
+CHARACTER(LEN=20) :: input_file, output_file
 CHARACTER(LEN=1) :: inputfile_choice, box_choice
 
 WRITE(6,*) '*************************************'
@@ -30,6 +30,7 @@ IF (choice_input == 1) THEN
   WRITE(6,*)'Parameters read from parameters.inpt'
   OPEN(unit = 11, file = "parameters.inpt", status='old', iostat=io)
   READ(11,*) input_file
+  READ(11,*) output_file
   READ(11,*) num_species
   ALLOCATE(num_atoms(num_species))
   ALLOCATE(ref_atom(num_species))
@@ -54,7 +55,12 @@ ELSE IF (choice_input == 2) THEN
     READ(5,*) input_file
   ELSE IF (inputfile_choice == 'y') THEN
     input_file = 'trajectories.xyz'
-  ENDIF      
+  ENDIF 
+  WRITE(6,*) ' Do you want to keep the default name (box_rebuilt.xyz) for the output? (y/n)' 
+  READ(5,*) output_file
+  IF () THEN
+  ELSE IF () THEN
+  ENDIF
   WRITE(6,*) ' How many species are there? '
   READ(5,*) num_species
 
