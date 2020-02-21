@@ -11,7 +11,7 @@ INTEGER, ALLOCATABLE, DIMENSION(:) :: xref, yref, zref
 DOUBLE PRECISION, ALLOCATABLE, DIMENSION(:,:) :: X, Y, Z
 CHARACTER(LEN=20), ALLOCATABLE, DIMENSION(:,:) :: nom
 CHARACTER(LEN=20) :: input_file, output_file
-CHARACTER(LEN=1) :: inputfile_choice, box_choice
+CHARACTER(LEN=1) :: inputfile_choice, box_choice, outputfile_choice
 
 WRITE(6,*) '*************************************'
 WRITE(6,*) '*      REBUILT BROKEN MOLECULES     * '
@@ -22,8 +22,6 @@ WRITE(6,*)
 WRITE(6,*) 'Read the input file parameters.inpt (1) or answer questions (2)?'
 READ(5,*) choice_input
 WRITE(6,*)
-WRITE(6,*) ' SPECIES PARAMETER '
-WRITE(6,*) '-------------------'
 
 ! *** READ PARAMETERS.INPT FILE ***
 IF (choice_input == 1) THEN
@@ -57,10 +55,16 @@ ELSE IF (choice_input == 2) THEN
     input_file = 'trajectories.xyz'
   ENDIF 
   WRITE(6,*) ' Do you want to keep the default name (box_rebuilt.xyz) for the output? (y/n)' 
-  READ(5,*) output_file
-  IF () THEN
-  ELSE IF () THEN
+  READ(5,*) outputfile_choice
+  IF (outputfile_choice == 'n') THEN
+    WRITE(6,*) ' Please enter the name of the output file '
+    READ(5,*) output_file
+  ELSE IF (outputfile_choice == 'y') THEN
+    output_file = 'box_rebuilt.xyz'
   ENDIF
+  WRITE(6,*)
+  WRITE(6,*) ' SPECIES PARAMETER '
+  WRITE(6,*) '-------------------'
   WRITE(6,*) ' How many species are there? '
   READ(5,*) num_species
 
@@ -115,7 +119,7 @@ WRITE(6,*) '--------------------------'
 !*************************** REBUILDING ***************************
 !------------------------------------------------------------------
 
-OPEN(unit = 20, file = "box_rebuilt.dat", iostat=io)
+OPEN(unit = 20, file = output_file, iostat=io)
 OPEN(unit = 10, file = input_file, status='old', iostat=io)
 
 READ(10,*) num_xyz
