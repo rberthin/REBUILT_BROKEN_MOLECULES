@@ -4,20 +4,20 @@ IMPLICIT NONE
 
 INTEGER :: num_species, i, n, m, io
 INTEGER :: atom, mol, choice_input
-DOUBLE PRECISION :: boxx, boxy, boxz
+DOUBLE PRECISION :: boxlen, boxx, boxy, boxz
 DOUBLE PRECISION :: xdiff, ydiff, zdiff
 INTEGER, ALLOCATABLE, DIMENSION(:) :: num_atoms, ref_atom, num_molecules
 INTEGER, ALLOCATABLE, DIMENSION(:) :: xref, yref, zref
 DOUBLE PRECISION, ALLOCATABLE, DIMENSION(:,:) :: X, Y, Z
 CHARACTER(LEN=20), ALLOCATABLE, DIMENSION(:,:) :: nom
 CHARACTER(LEN=20) :: input_file
-CHARACTER(LEN=1) :: inputfile_choice
+CHARACTER(LEN=1) :: inputfile_choice, box_choice
 
 WRITE(6,*) '*************************************'
 WRITE(6,*) '*      REBUILT BROKEN MOLECULES     * '
 WRITE(6,*) '*************************************'
 WRITE(6,*)
-WRITE(6,*) ' I read only xyz files !'
+WRITE(6,*) ' I read only xyz files (for now..)!'
 WRITE(6,*) 
 WRITE(6,*) 'Read the input file parameters.inpt (1) or answer questions (2)?'
 READ(5,*) choice_input
@@ -84,12 +84,22 @@ ELSE IF (choice_input == 2) THEN
   WRITE(6,*)
   WRITE(6,*) ' !! PUT IN THE SAME UNIT AS THE POSITIONS !!'
   WRITE(6,*)
-  WRITE(6,*) ' Length of the box in the x direction ?'
-  READ(5,*) boxx
-  WRITE(6,*) ' Length of the box in the y direction ?'
-  READ(5,*) boxy
-  WRITE(6,*) ' Length of the box in the z direction ?'
-  READ(5,*) boxz
+  WRITE(6,*) 'Are the 3 cell vectors the same size ?(y/n) '
+  READ(5,*) box_choice
+  IF (box_choice == 'y') THEN
+    WRITE(6,*) 'Enter the length of the box '
+    READ(5,*) boxlen
+    boxx = boxlen
+    boxy = boxlen
+    boxz = boxlen
+  ELSE IF (box_choice == 'n') THEN
+    WRITE(6,*) ' Enter the length of the box in the x direction ?'
+    READ(5,*) boxx
+    WRITE(6,*) ' Enter the length of the box in the y direction ?'
+    READ(5,*) boxy
+    WRITE(6,*) ' Enter the length of the box in the z direction ?'
+    READ(5,*) boxz
+  ENDIF
 ENDIF  
 WRITE(6,*) '--------------------------'
 WRITE(6,*) '**** END OF THE INPUT ****'
