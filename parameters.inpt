@@ -1,9 +1,10 @@
-	! number of species
+trajectories.xyz
+1	         ! number of species
 ! block do to for each specie
-	! number of molecules
-	! number of atoms in one molecule
-	! reference atom
+216	         ! number of molecules
+6	         ! number of atoms in one molecule
+2	         ! reference atom
 !box parameters
-	! in x direction
-	! in y direction
-	! in z direction
+50.175232345     ! in x direction
+50.175232345     ! in y direction
+50.175232345     ! in z direction

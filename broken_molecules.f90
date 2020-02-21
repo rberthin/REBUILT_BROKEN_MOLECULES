@@ -2,7 +2,7 @@ PROGRAM REBUILT
 
 IMPLICIT NONE
 
-INTEGER :: num_species, i, n, m, choice, io
+INTEGER :: num_species, i, n, m, io
 INTEGER :: atom, mol, choice_input
 DOUBLE PRECISION :: boxx, boxy, boxz
 DOUBLE PRECISION :: xdiff, ydiff, zdiff
@@ -10,6 +10,8 @@ INTEGER, ALLOCATABLE, DIMENSION(:) :: num_atoms, ref_atom, num_molecules
 INTEGER, ALLOCATABLE, DIMENSION(:) :: xref, yref, zref
 DOUBLE PRECISION, ALLOCATABLE, DIMENSION(:,:) :: X, Y, Z
 CHARACTER(LEN=20), ALLOCATABLE, DIMENSION(:,:) :: nom
+CHARACTER(LEN=20) :: input_file
+CHARACTER(LEN=1) :: inputfile_choice
 
 WRITE(6,*) '*************************************'
 WRITE(6,*) '*      REBUILT BROKEN MOLECULES     * '
@@ -27,25 +29,32 @@ WRITE(6,*) '-------------------'
 IF (choice_input == 1) THEN
   WRITE(6,*)'Parameters read from parameters.inpt'
   OPEN(unit = 11, file = "parameters.inpt", status='old', iostat=io)
+  READ(11,*) input_file
   READ(11,*) num_species
-  WRITE(6,*) 'OK'
   ALLOCATE(num_atoms(num_species))
   ALLOCATE(ref_atom(num_species))
   ALLOCATE(num_molecules(num_species))
-  READ(11,*)  
+  READ(11,*)    !read a comment 
   DO i = 1, num_species
     READ(11,*) num_molecules(i)
     READ(11,*) num_atoms(i)
     READ(11,*) ref_atom(i)
   ENDDO
-  READ(11,*)
-  WRITE(6,*) 'OK'
+  READ(11,*)   !read a comment
   READ(11,*) boxx
   READ(11,*) boxy
   READ(11,*) boxz
   ! *****     END     *****
 
-ELSE IF (choice_input == 2) THEN        
+ELSE IF (choice_input == 2) THEN
+  WRITE(6,*) ' Is the xyz file named trajectories.xyz ? (y/n)'
+  READ(5,*) inputfile_choice
+  IF (inputfile_choice == 'n') THEN
+    WRITE(6,*) ' Please enter the name of the xyz file '
+    READ(5,*) input_file
+  ELSE IF (inputfile_choice == 'y') THEN
+    input_file = 'trajectories.xyz'
+  ENDIF      
   WRITE(6,*) ' How many species are there? '
   READ(5,*) num_species
 
@@ -91,7 +100,8 @@ WRITE(6,*) '--------------------------'
 !------------------------------------------------------------------
 
 OPEN(unit = 20, file = "box_rebuilt.dat", iostat=io)
-OPEN(unit = 10, file = "trajectories.xyz", status='old', iostat=io)
+OPEN(unit = 10, file = input_file, status='old', iostat=io)
+
 READ(10,*)
 READ(10,*)
 
