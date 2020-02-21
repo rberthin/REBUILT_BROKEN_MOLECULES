@@ -3,7 +3,7 @@ PROGRAM REBUILT
 IMPLICIT NONE
 
 INTEGER :: num_species, i, n, m, io
-INTEGER :: atom, mol, choice_input
+INTEGER :: atom, mol, choice_input, num_xyz
 DOUBLE PRECISION :: boxlen, boxx, boxy, boxz
 DOUBLE PRECISION :: xdiff, ydiff, zdiff
 INTEGER, ALLOCATABLE, DIMENSION(:) :: num_atoms, ref_atom, num_molecules
@@ -70,7 +70,7 @@ ELSE IF (choice_input == 2) THEN
     READ(5,*) num_molecules(i)
     WRITE(6,*) ' How many atoms are there in one molecule? '
     READ(5,*) num_atoms(i)
-    WRITE(6,*) ' Choose the reference atom  '
+    WRITE(6,*) ' Choose the reference atom for this specie'
     WRITE(6,*) ' Number in the same order as in the position file '
     READ(5,*) ref_atom(i) 
   ENDDO 
@@ -112,8 +112,11 @@ WRITE(6,*) '--------------------------'
 OPEN(unit = 20, file = "box_rebuilt.dat", iostat=io)
 OPEN(unit = 10, file = input_file, status='old', iostat=io)
 
+READ(10,*) num_xyz
 READ(10,*)
-READ(10,*)
+
+WRITE(20,*) num_xyz 
+WRITE(20,*) 
 
 DO i = 1, num_species
   
