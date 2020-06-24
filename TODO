@@ -1,2 +1,1 @@
-1- allow to have a trajectory file with several steps (and to be able to choose which step we want to reconstruct)
-2- add other type of input file (lammps, pdb)
+1- add other type of input file (lammps, pdb)
