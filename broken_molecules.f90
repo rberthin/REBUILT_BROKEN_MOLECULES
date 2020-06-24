@@ -2,8 +2,8 @@ PROGRAM REBUILT
 
 IMPLICIT NONE
 
-INTEGER :: num_species, i, n, m, io
-INTEGER :: atom, mol, choice_input, num_xyz
+INTEGER :: num_species, s, i, n, m, io
+INTEGER :: atom, mol, choice_input, num_xyz, num_step
 DOUBLE PRECISION :: boxlen, boxx, boxy, boxz
 DOUBLE PRECISION :: xdiff, ydiff, zdiff
 INTEGER, ALLOCATABLE, DIMENSION(:) :: num_atoms, ref_atom, num_molecules
@@ -43,6 +43,7 @@ IF (choice_input == 1) THEN
   READ(11,*) boxx
   READ(11,*) boxy
   READ(11,*) boxz
+  READ(11,*) num_step
   ! *****     END     *****
 
 ELSE IF (choice_input == 2) THEN
@@ -110,6 +111,8 @@ ELSE IF (choice_input == 2) THEN
     WRITE(6,*) ' Enter the length of the box in the z direction ?'
     READ(5,*) boxz
   ENDIF
+  WRITE(6,*) 'How many step ?'
+  READ(5,*) num_step 
 ENDIF  
 WRITE(6,*) '--------------------------'
 WRITE(6,*) '**** END OF THE INPUT ****'
@@ -122,73 +125,79 @@ WRITE(6,*) '--------------------------'
 OPEN(unit = 20, file = output_file, iostat=io)
 OPEN(unit = 10, file = input_file, status='old', iostat=io)
 
-READ(10,*) num_xyz
-READ(10,*)
+DO s = 1, num_step
+  READ(10,*) num_xyz
+  READ(10,*)
+  
+  WRITE(20,*) num_xyz 
+  WRITE(20,*) 
 
-WRITE(20,*) num_xyz 
-WRITE(20,*) 
-
-DO i = 1, num_species
-  
-  atom = num_atoms(i)
-  mol = num_molecules(i)
-  
-  ALLOCATE(X(atom, mol))
-  ALLOCATE(Y(atom, mol))
-  ALLOCATE(Z(atom, mol))
-  ALLOCATE(nom(atom, mol))
-  ALLOCATE(xref(mol))
-  ALLOCATE(yref(mol))
-  ALLOCATE(zref(mol))
-  
-  WRITE(6,*) '** Specie', i, '**'
+  DO i = 1, num_species
+    
+    atom = num_atoms(i)
+    mol = num_molecules(i)
+    
+    ALLOCATE(X(atom, mol))
+    ALLOCATE(Y(atom, mol))
+    ALLOCATE(Z(atom, mol))
+    ALLOCATE(nom(atom, mol))
+    ALLOCATE(xref(mol))
+    ALLOCATE(yref(mol))
+    ALLOCATE(zref(mol))
+    
+    WRITE(6,*) '** Specie', i, '**'
  
-  DO n = 1, atom
-    DO m = 1, mol
-      READ(10,*) nom(n,m), X(n,m), Y(n,m), Z(n,m)
-      IF (n == ref_atom(i)) THEN
-        xref(m) = X(n,m)
-        yref(m) = Y(n,m)
-        zref(m) = Z(n,m)
-      ENDIF
-    ENDDO
-  ENDDO
-  
-  DO m = 1, mol
     DO n = 1, atom
-      xdiff = X(n,m)-xref(m)
-      ydiff = Y(n,m)-yref(m)
-      zdiff = Z(n,m)-zref(m)
-        
-      IF(xdiff > boxx/2) THEN
-        X(n,m) = X(n,m) - boxx
-      ELSE IF (xdiff < -boxx/2) THEN
-        X(n,m) = X(n,m) + boxx      
-      ENDIF
-        
-      IF(ydiff > boxy/2) THEN
-        Y(n,m) = Y(n,m) - boxy
-      ELSE IF (ydiff < -boxy/2) THEN
-        Y(n,m) = Y(n,m) + boxy
-      ENDIF
-
-      IF(zdiff > boxz/2) THEN
-        Z(n,m) = Z(n,m) - boxz
-      ELSE IF (zdiff < -boxz/2) THEN
-        Z(n,m) = Z(n,m) + boxz
-      ENDIF
+      DO m = 1, mol
+        READ(10,*) nom(n,m), X(n,m), Y(n,m), Z(n,m)
+        IF (n == ref_atom(i)) THEN
+          xref(m) = X(n,m)
+          yref(m) = Y(n,m)
+          zref(m) = Z(n,m)
+        ENDIF
+      ENDDO
     ENDDO
-  ENDDO
   
-  DO n = 1, atom
     DO m = 1, mol
-      WRITE(20,*) nom(n,m), X(n,m), Y(n,m), Z(n,m)
+      DO n = 1, atom
+        xdiff = X(n,m)-xref(m)
+        ydiff = Y(n,m)-yref(m)
+        zdiff = Z(n,m)-zref(m)
+          
+        IF(xdiff > boxx/2) THEN
+          X(n,m) = X(n,m) - boxx
+        ELSE IF (xdiff < -boxx/2) THEN
+          X(n,m) = X(n,m) + boxx      
+        ENDIF
+          
+        IF(ydiff > boxy/2) THEN
+          Y(n,m) = Y(n,m) - boxy
+        ELSE IF (ydiff < -boxy/2) THEN
+          Y(n,m) = Y(n,m) + boxy
+        ENDIF
+
+        IF(zdiff > boxz/2) THEN
+          Z(n,m) = Z(n,m) - boxz
+        ELSE IF (zdiff < -boxz/2) THEN
+          Z(n,m) = Z(n,m) + boxz
+        ENDIF
+      ENDDO
     ENDDO
+  
+    DO n = 1, atom
+      DO m = 1, mol
+        WRITE(20,*) nom(n,m), X(n,m), Y(n,m), Z(n,m)
+      ENDDO
+    ENDDO
+    DEALLOCATE(X)
+    DEALLOCATE(Y)
+    DEALLOCATE(Z)
+    DEALLOCATE(nom) 
+    DEALLOCATE(xref) 
+    DEALLOCATE(yref)
+    DEALLOCATE(zref) 
   ENDDO
-  DEALLOCATE(X)
-  DEALLOCATE(Y)
-  DEALLOCATE(Z)
-  DEALLOCATE(nom)  
+  WRITE(6,*) 'STEP', s, 'DONE !'
 ENDDO
 WRITE(6,*) '--------------------------'
 WRITE(6,*) '******* ALL DONE ! *******'
